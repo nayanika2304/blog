@@ -8,10 +8,16 @@ import {signinRouter} from "./routes/signin";
 import {signoutRouter} from "./routes/signout";
 import {errorHandler} from "./middlewares/error-handler";
 import {NotFoundError} from "./errors/not-found-error";
+import cookieSession from "cookie-session";
 
 const app = express()
-app.use(json())
+app.set('trust proxy',true) // to make sure express is aware behind the proxy of ingress-nginx and let the traffic come in
 
+app.use(json())
+app.use(cookieSession({
+    signed: false,
+    secure:true
+}))
 app.use(currentUserRouter);
 app.use(signinRouter);
 app.use(signoutRouter);
